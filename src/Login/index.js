@@ -4,6 +4,7 @@ import * as firebase from "firebase/app";
 import "firebase/database";
 import "firebase/auth";
 import {getFromStorage, setInStorage} from '../utils';
+import { addUser } from '../utils/fakeServer';
 
 const provider = new firebase.auth.GoogleAuthProvider();
 
@@ -19,25 +20,21 @@ function Login() {
 			} = result;
 			const id = profile.id;
 			profile.phone_number = phoneNumber;
+			if(isNewUser) addUser(profile);
 
-			if(isNewUser) {
-				firebase.database()
-					.ref(`users/${id}`)
-					.set(profile);
-			}
-
-			const tokens = getFromStorage('tokens') || {};
+			const tokens = getFromStorage('tokens') || [];
 			const users = getFromStorage('users') || [];
 			profile.access_token = accessToken;
-			tokens[id] = accessToken;
-			setInStorage('tokens', tokens);
-
 			const index = users.findIndex(user => user.id === id);
-			if(index === -1) users.push(profile);
-			else users[index] = profile;
-			setInStorage('users', users);
-			history.push(`/${id}/dashboard`);
-
+			if(index === -1) {
+				tokens.push(accessToken);
+				users.push(profile);
+				setInStorage('tokens', tokens);
+				setInStorage('users', users);
+				history.push(`/${tokens.length - 1}/dashboard`);
+			} else {
+				history.push(`/${index}/dashboard`);
+			}
 		}).catch(function(error) {
 			console.log('error', error);
 		});

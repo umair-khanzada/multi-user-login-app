@@ -11,6 +11,29 @@ body {
   align-items: center;
   justify-content: center;
   background-color: #f0f0f0;
+  padding: 50px 0;
+}
+button {
+  width: 100%;
+  border: 2px solid #3bafaa;
+  margin-top: 10px;
+  color: #3bafaa;
+  padding: 15px 10px;
+  font-size: 16px;
+  font-family: 'Quicksand', sans-serif;
+  font-weight: bold;
+  cursor: pointer;
+}
+a {
+  width: 100%;
+  display: block;
+  text-decoration: none;
+}
+h3, p {
+  margin: 5px 0;
+}
+p {
+  padding-bottom: 10px;
 }
 
 /* Login Styling */
@@ -61,6 +84,8 @@ body {
 /* Dashboard Styling */
 .account-list {
   width: 20%;
+  height: calc(100vh - 50px);
+  overflow: scroll;
 }
 .account-list ul{
   margin: 0;
@@ -71,14 +96,38 @@ body {
   padding: 10px;
   background: #3bafaa;
   margin-bottom: 2px;
-  border-left: 5px solid #277774;
+  border-left: 5px solid #3bafaa;
   position: relative;
-  color: #fff;
+}
+.account-list ul li.active{
+  border-left: 5px solid #277774;
 }
 .account-list ul li p{
   margin: 0 0 3px 0;
+  color: #fff;
+}
+.account-list ul li small{
+  color: #fff;
+}
+.add-account {
+  margin: 20px 0;
+  text-align: right;
 }
 
 .account-details {
   width: 80%;
+  height: calc(100vh - 50px);
+  text-align: center;
 }
+.account-details .card {
+  width: 500px;
+  margin: 0 auto;
+  background: #fff;
+  /*padding: 20px;*/
+  position: relative;
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+.account-details .avatar {
+  width: 100%;
+}
+

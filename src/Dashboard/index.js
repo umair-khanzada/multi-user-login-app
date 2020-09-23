@@ -1,29 +1,47 @@
-import React, { Fragment, memo, useEffect } from 'react';
-import { useHistory, useParams } from "react-router-dom";
-import { setInStorage } from "../utils";
+import React, { Fragment, memo } from 'react';
+import { Link, Redirect, useHistory, useParams } from "react-router-dom";
+import { getFromStorage, setInStorage } from "../utils";
+import { getCurrentUser, getAllUsers } from '../utils/fakeServer';
 
 function Dashboard() {
-	const users = JSON.parse(localStorage.getItem('users'));
-	let history = useHistory();
-	let params = useParams();
-	console.log('params', params);
+	const tokens = getFromStorage('tokens');
+	const history = useHistory();
+	const params = useParams();
+	const users = getAllUsers();
+	const currentUser = getCurrentUser(tokens[params.index]) || {};
+
+	function signOut() {
+		setInStorage('users', []);
+		setInStorage('tokens', []);
+		history.push('/');
+	}
 
 	return (
 		<Fragment>
+			{!tokens.length && <Redirect to="/" />}
+			{tokens.length && !tokens[params.index] && <Redirect to="/0/dashboard" />}
 			<div className="account-list">
 				<ul>
 					{
-						users.map((user) => (
-							<li key={user.id}>
-								<p>{user.name}</p>
-								<small>{user.email}</small>
+						users.map((user, i) => (
+							<li className={+params.index === i ? 'active' : ''} key={user.id}>
+								<Link to={`/${i}/dashboard`} target="_blank">
+									<p>{user.name}</p>
+									<small>{user.email}</small>
+								</Link>
 							</li>
 						))
 					}
+					<Link className="add-account" to="/">Add another account</Link>
+					<button onClick={signOut}>Sign out of all accounts</button>
 				</ul>
 			</div>
 			<div className="account-details">
-				Account Details
+				<div className="card">
+					<img className="avatar" src={currentUser.picture} alt=""/>
+					<h3>{currentUser.name}</h3>
+					<p>{currentUser.email}</p>
+				</div>
 			</div>
 		</Fragment>
 	);
